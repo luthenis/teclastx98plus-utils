@@ -1,0 +1,28 @@
+#!/bin/bash
+
+input="Goodix Capacitive TouchScreen";
+if [ "$1" == "next" ]; then
+	orientation=$(xrandr | grep 'eDP1 ' | awk '{print $4}');
+	case "$orientation" in
+		"right")
+			xrandr -o inverted;;
+		"inverted")
+			xrandr -o left;;
+		"left")
+			xrandr -o normal;;
+		*)
+			xrandr -o right;;
+	esac
+fi
+orientation=$(xrandr | grep 'eDP1 ' | awk '{print $4}');
+
+case "$orientation" in
+	"right")
+		xinput set-prop "$input" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1;;
+	"inverted")
+		xinput set-prop "$input" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1;;
+	"left")
+		xinput set-prop "$input" "Coordinate Transformation Matrix" 0 -1 1 1 0 0 0 0 1;;
+	*)
+		xinput set-prop "$input" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1;;
+esac

@@ -1,0 +1,9 @@
+#!/bin/bash
+sudo /home/leandro/bin/rtl8723bs_bt/rtk_hciattach -n -s 115200 /dev/ttyS1 rtk_h5 > /tmp/btS1.log 2>&1 &
+sudo /home/leandro/bin/rtl8723bs_bt/rtk_hciattach -n -s 115200 /dev/ttyS2 rtk_h5 > /tmp/btS2.log 2>&1 &
+sleep 2
+sudo systemctl restart bluetooth
+sleep 2
+echo -e 'power on\nexit' | bluetoothctl
+sleep 2
+blueman-applet &
