@@ -1,28 +1,28 @@
 #!/bin/bash
-
+monitorlog="$HOME/.sensor.log";
+echo '' > $monitorlog;
+monitor-sensor >> $monitorlog 2>&1 &
 input="Goodix Capacitive TouchScreen";
-if [ "$1" == "next" ]; then
-	orientation=$(xrandr | grep 'eDP1 ' | awk '{print $4}');
+while inotifywait -e modify $monitorlog; do
+	tail -n1 $monitorlog;
+	orientation=$(tail -n 1 $monitorlog | grep 'orientation' | grep -oE '[^ ]+$');
 	case "$orientation" in
-		"right")
-			xrandr -o inverted;;
-		"inverted")
-			xrandr -o left;;
-		"left")
-			xrandr -o normal;;
-		*)
-			xrandr -o right;;
+		"normal")
+			xinput set-prop "$input" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1;
+			xrandr --output eDP-1 --rotate right;
+			;;
+		"right-up")
+			xinput set-prop "$input" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1;
+			xrandr --output eDP-1 --rotate normal;
+			;;
+		"bottom-up")
+			xinput set-prop "$input" "Coordinate Transformation Matrix" 0 -1 1 1 0 0 0 0 1;
+			xrandr --output eDP-1 --rotate left;
+			;;
+		"left-up")
+			xinput set-prop "$input" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1;
+			xrandr --output eDP-1 --rotate inverted;
+			;;
 	esac
-fi
-orientation=$(xrandr | grep 'eDP1 ' | awk '{print $4}');
-
-case "$orientation" in
-	"right")
-		xinput set-prop "$input" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1;;
-	"inverted")
-		xinput set-prop "$input" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1;;
-	"left")
-		xinput set-prop "$input" "Coordinate Transformation Matrix" 0 -1 1 1 0 0 0 0 1;;
-	*)
-		xinput set-prop "$input" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1;;
-esac
+	echo '' > $monitorlog;
+done
