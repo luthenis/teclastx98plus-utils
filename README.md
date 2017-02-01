@@ -6,5 +6,5 @@ Requires iio-sensor-proxy and inotify-tools
 Add bin/rotate in DE autostart
 
 
-~~#[bin/startbt](https://github.com/demolitions/teclastx98plus-utils/blob/master/bin/startbt)#~~
+#~~[bin/startbt](https://github.com/demolitions/teclastx98plus-utils/blob/master/bin/startbt)~~#
 Not needed anymore, script that was needed in kernels before 4.10 to start bluetooth correctly.
