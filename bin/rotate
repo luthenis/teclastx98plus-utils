@@ -2,26 +2,26 @@
 monitorlog="$HOME/.sensor.log";
 echo '' > $monitorlog;
 monitor-sensor >> $monitorlog 2>&1 &
-input="Goodix Capacitive TouchScreen";
+input="pointer:Goodix Capacitive TouchScreen";
 while inotifywait -e modify $monitorlog; do
 	tail -n1 $monitorlog;
 	orientation=$(tail -n 1 $monitorlog | grep 'orientation' | grep -oE '[^ ]+$');
 	case "$orientation" in
 		"normal")
 			xinput set-prop "$input" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1;
-			xrandr --output eDP-1 --rotate right;
+			xrandr --output eDP-1 --rotate left;
 			;;
 		"right-up")
-			xinput set-prop "$input" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1;
-			xrandr --output eDP-1 --rotate normal;
+			xinput set-prop "$input" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1;
+			xrandr --output eDP-1 --rotate inverted;
 			;;
 		"bottom-up")
 			xinput set-prop "$input" "Coordinate Transformation Matrix" 0 -1 1 1 0 0 0 0 1;
-			xrandr --output eDP-1 --rotate left;
+			xrandr --output eDP-1 --rotate right;
 			;;
 		"left-up")
-			xinput set-prop "$input" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1;
-			xrandr --output eDP-1 --rotate inverted;
+			xinput set-prop "$input" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1;
+			xrandr --output eDP-1 --rotate normal;
 			;;
 	esac
 	echo '' > $monitorlog;
