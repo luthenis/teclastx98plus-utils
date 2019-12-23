@@ -5,3 +5,4 @@ Requires iio-sensor-proxy and inotify-tools
 
 Add bin/rotate in DE autostart (NEED HOWTO)
 
+rtl8723bs_bt not needed but too lazy to remove folder
